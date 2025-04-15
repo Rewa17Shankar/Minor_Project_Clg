@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Ensure this file exists for styling -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background: #ecf0f1;
+        }
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .navbar .user-info {
+            font-size: 16px;
+        }
+        .navbar .menu a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: #34495e;
+            color: white;
+            padding-top: 60px;
+            position: fixed;
+            top: 50px;
+            left: 0;
+            height: calc(100vh - 50px);
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            padding: 15px;
+            text-align: center;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            font-size: 18px;
+        }
+        .sidebar ul li:hover {
+            background: #2c3e50;
+        }
+        /* Main Content */
+        .main-content {
+            margin-left: 270px;
+            padding: 20px;
+            padding-top: 70px;
+            width: 100%;
+        }
+        .quiz-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .quiz-table th, .quiz-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .quiz-table th {
+            background: #3498db;
+            color: white;
+        }
+        .quiz-table tbody tr:hover {
+            background: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="user-info">
+            <strong><%= user.name %></strong> | <%= user.email %>
+        </div>
+        <div class="menu">
+            <a href="/">Home</a>
+            <a href="#">Help</a>
+            <a href="/logout" style="color: red;">Logout</a>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="/quiz-setup">Quiz Menu</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/dashboard">Dashboard</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Quiz History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Difficulty</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% quizHistory.forEach(function(result) { %>
+                    <tr>
+                        <td><%= result.category || 'N/A' %></td>
+                        <td><%= result.difficulty || 'N/A' %></td>
+                        <td><%= result.correct_answers %> / <%= result.total_questions %></td>
+                        <td><%= new Date(result.submitted_at).toLocaleString() %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

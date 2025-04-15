@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Login</h2>
+
+        <!-- Show error message if login fails -->
+        <% if (error) { %>
+            <p class="error"><%= error %></p>
+        <% } %>
+
+        <!-- Login Form -->
+        <form action="/login" method="POST">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Enter your password">
+
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- Google Login -->
+        <div class="google-login">
+            <a href="/auth/google" class="google-btn">Login with Google</a>
+        </div>
+
+        <!-- Signup Link -->
+        <p class="signup-link">New User? <a href="/signup">Sign Up</a></p>
+    </div>
+
+</body>
+</html>

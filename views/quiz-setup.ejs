@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Selection</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f8;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-left {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .navbar-right a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+    }
+
+    .navbar-right a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main content */
+    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 60px;
+    }
+
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .form-container label {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 8px;
+      margin-top: 20px;
+    }
+
+    .form-container select {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .form-container button {
+      margin-top: 30px;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      background-color: #3498db;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .form-container button:hover {
+      background-color: #2980b9;
+    }
+
+    .error-msg {
+      color: red;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .form-container select {
+        width: 100%;
+      }
+
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar-right {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="navbar-left">
+      Welcome, <%= user.name %>!
+    </div>
+    <div class="navbar-right">
+      <a href="/">Home</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <form class="form-container" action="/quiz" method="GET">
+      <label for="category">Select Quiz Category:</label>
+      <select name="category" id="category" required>
+        <option value="">-- Choose a category --</option>
+        <option value="9">General Knowledge</option>
+        <option value="10">Entertainment: Books</option>
+        <option value="11">Entertainment: Film</option>
+        <option value="12">Entertainment: Music</option>
+        <option value="18">Science: Computers</option>
+        <option value="19">Science: Mathematics</option>
+        <option value="20">Mythology</option>
+        <option value="21">Sports</option>
+        <option value="22">Geography</option>
+        <option value="23">History</option>
+        <option value="24">Politics</option>
+        <option value="25">Art</option>
+        <option value="26">Celebrities</option>
+        <option value="27">Animals</option>
+        <option value="28">Vehicles</option>
+        <option value="29">Comics</option>
+        <option value="30">Gadgets</option>
+        <option value="31">Japanese Anime & Manga</option>
+        <option value="32">Cartoon & Animations</option>
+      </select>
+
+      <label for="difficulty">Select Difficulty Level:</label>
+      <select name="difficulty" id="difficulty" required>
+        <option value="">-- Choose difficulty --</option>
+        <option value="easy">Easy (10 questions)</option>
+        <option value="medium">Medium (25 questions)</option>
+        <option value="hard">Hard (50 questions)</option>
+      </select>
+
+      <button type="submit">Start Quiz</button>
+
+      <% if (query.error) { %>
+        <p class="error-msg">⚠️ Please select a category and difficulty before starting.</p>
+      <% } %>
+    </form>
+  </div>
+
+</body>
+</html>

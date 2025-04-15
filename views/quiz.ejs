@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Time</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #343a40;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-left {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .navbar-right {
+      font-size: 18px;
+    }
+
+    /* Quiz content */
+    .quiz-container {
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question-block {
+      margin-bottom: 30px;
+    }
+
+    .question-block p {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .question-block label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button[type="submit"] {
+      display: block;
+      margin: 30px auto 0;
+      padding: 12px 30px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      .quiz-container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="navbar-left">Quiz App</div>
+    <div class="navbar-right">Welcome, <%= user.name %></div>
+  </div>
+
+  <!-- Quiz Content -->
+  <div class="quiz-container">
+    <h1>Quiz Time!</h1>
+    <form action="/submit" method="POST">
+      <% questions.forEach((q, i) => { %>
+        <div class="question-block">
+          <p>Q<%= i + 1 %>: <%= q.question %></p>
+          <% 
+            const allAnswers = q.incorrect_answers.concat(q.correct_answer);
+            const shuffled = allAnswers.sort(() => Math.random() - 0.5);
+            shuffled.forEach(ans => { 
+          %>
+            <label>
+              <input type="radio" name="q<%= i %>" value="<%= ans %>" required>
+              <%= ans %>
+            </label>
+          <% }) %>
+        </div>
+      <% }) %>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+</body>
+</html>

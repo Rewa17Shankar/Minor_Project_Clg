@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Results</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #343a40;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-left {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .navbar-right a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 16px;
+      transition: color 0.3s ease;
+    }
+
+    .navbar-right a:hover {
+      color: #00bcd4;
+    }
+
+    .results-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #343a40;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      color: #555;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px 15px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .score {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #28a745;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .navbar-right {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="navbar-left">Quiz App</div>
+    <div class="navbar-right">
+      <a href="/">Home</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/quiz-setup">Play Again</a>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results-container">
+    <h1>Quiz Results</h1>
+
+    <h2>Answer Breakdown</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Your Answer</th>
+          <th>Correct Answer</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% results.forEach(function(result) { %>
+          <tr>
+            <td><%= result.question %></td>
+            <td><%= result.userAnswer %></td>
+            <td><%= result.correctAnswer %></td>
+            <td style="color: <%= result.isCorrect ? 'green' : 'red' %>;">
+              <%= result.isCorrect ? "✔️ Correct" : "❌ Incorrect" %>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <div class="score">
+      Final Score: <%= score %> / <%= total %>
+    </div>
+  </div>
+
+</body>
+</html>
