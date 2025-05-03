@@ -4,10 +4,169 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us</title>
+    <style>
+        /* Reset margin and padding for a clean slate */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Body and background styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: #f7f7f7;
+            color: #333;
+            padding: 0;
+        }
+
+        /* Navbar styles */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2c3e50;
+            padding: 15px 30px;
+            color: white;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #34495e;
+        }
+
+        .navbar-left {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Main content area */
+        .about-content {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        h3 {
+            font-size: 28px;
+            margin-top: 30px;
+            color: #2c3e50;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            color: #555;
+            font-size: 18px;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <h1>About Us</h1>
-    <p>Welcome to our quiz app! This app helps users test their knowledge.</p>
-    <a href="/">Go back home</a>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="navbar-left">
+            Quiz App
+        </div>
+        <div class="navbar-right">
+            <a href="/">Home</a>
+            <a href="/profile"><%= user ? user.username : 'Guest' %></a> <!-- User name if logged in, else 'Guest' -->
+        </div>
+    </nav>
+
+    <!-- About Us Section -->
+    <div class="about-content">
+        <h1>About Us</h1>
+        
+        <p class="description">Welcome to our quiz app! This app helps users test their knowledge across various topics. Whether you're a trivia enthusiast or just want to challenge yourself, our quizzes offer a fun and educational experience. Our mission is to make learning enjoyable by providing users with engaging quizzes. You can test your knowledge on various topics, track your progress, and compete with friends!</p>
+
+        <p class="description">Our app is designed to cater to a wide range of users, whether you're a casual learner or someone who loves to take on challenges. It provides quizzes across multiple categories such as history, science, geography, and general knowledge. Our quizzes are designed not only to be fun but also to improve your learning. Through the quizzes, you can track your scores, compare your performance with others, and even challenge your friends to beat your score!</p>
+
+        <p class="description">Why choose our quiz app? It offers a unique combination of features that make it stand out. Our quiz categories are carefully curated to ensure there is something for everyone. Whether you’re passionate about history, interested in science, or just looking for a fun way to learn more about the world, you’ll find plenty of topics to choose from.</p>
+
+        <p class="description">In addition to quizzes, our app also provides detailed analytics of your quiz results. You can see your performance over time, review questions you got wrong, and understand areas where you can improve. This feature is particularly helpful for those who are using the quizzes as part of their learning or preparation for exams.</p>
+
+        <h3>Why Choose Our Quiz App?</h3>
+        <ul>
+            <li>Wide range of quiz categories</li>
+            <li>Challenging difficulty levels</li>
+            <li>Track your performance and quiz history</li>
+            <li>Easy to use and fun!</li>
+            <li>Perfect for casual learning or exam preparation</li>
+            <li>Engaging for all age groups</li>
+            <li>Compete with friends and challenge your own scores</li>
+            <li>Free to use with premium features available</li>
+        </ul>
+
+        <h3>Our Mission</h3>
+        <p class="description">Our mission is simple: we want to make learning fun and interactive. With quizzes that cater to a wide range of interests and topics, we aim to bring out the inner learner in everyone. We believe that learning should never be boring, and our quizzes are designed to engage users in a way that makes them want to come back for more.</p>
+
+        <h3>Our Future Plans</h3>
+        <p class="description">In the future, we plan to expand our app to include more quiz categories, more question types, and even more advanced features such as multiplayer quizzes and timed challenges. We're also working on integrating social media sharing options so you can share your quiz scores and challenge your friends on various platforms.</p>
+
+        <h3>How Our Quiz App Works</h3>
+        <p class="description">Our app is designed to be intuitive and user-friendly. Upon signing up, you’ll have access to a vast library of quizzes. You can select quizzes based on categories, difficulty levels, or even create custom quizzes. Once you start a quiz, you will be presented with multiple-choice questions, and at the end of the quiz, you’ll receive a score that shows how well you did. You can review your answers and learn from any mistakes you made.</p>
+
+        <h3>What Sets Us Apart?</h3>
+        <p class="description">There are many quiz apps available, but we pride ourselves on offering quizzes that are not only fun but also educational. We ensure that our questions are accurate, up-to-date, and challenging enough to keep you engaged. Additionally, our performance tracking tools allow you to measure your progress over time, ensuring that you are constantly improving your knowledge and understanding of various subjects.</p>
+
+        <h3>Get Involved</h3>
+        <p class="description">We welcome all types of users—whether you're a beginner or a seasoned quiz master. If you’re passionate about a certain subject, you can even submit your own quiz questions, which may be featured in our app. We value our community and are always looking for ways to improve the user experience. Your feedback helps us build a better product.</p>
+
+        <h3>Our Team</h3>
+        <p class="description">Our team consists of passionate individuals who are committed to building an engaging platform for learning. From developers to designers, we all share the same goal: to create an enjoyable and educational experience for our users. We're a diverse team with a love for quizzes, and we bring that passion to the app every day.</p>
+
+        <h3>Contact Us</h3>
+        <p class="description">If you have any questions or suggestions, don’t hesitate to reach out to us! We value your feedback and are always looking for ways to improve. You can contact us via email or through our contact form on the website.</p>
+
+        <p class="description">Thank you for choosing our quiz app! We hope you enjoy using it and that it helps you learn something new every day!</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2025 Quiz App | All rights reserved
+    </div>
+
 </body>
 </html>

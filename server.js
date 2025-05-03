@@ -10,32 +10,25 @@ const quizRoutes = require("./routes/quizRoutes");
 const flash = require("express-flash");
 const app = express();
 
-// Middleware to handle sessions (Place this before routes)
+// Middleware to handle sessions (Only once, placed before passport and routes)
 app.use(session({
-    secret: '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 ',
+    secret: process.env.SESSION_SECRET || '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 ', 
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { secure: false } // Set secure to true if using HTTPS
 }));
+
 // Middleware
 app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
-// Session middleware (Should be before passport)
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET || "quiz_secret_key",
-        resave: false,
-        saveUninitialized: false, // Don't store empty sessions
-        cookie: { secure: false }, // Set `true` in production (HTTPS)
-    })
-);
-
+// Initialize passport and session
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Flash messages middleware
 app.use(flash());
 
 // Middleware to make flash messages available in views
@@ -44,6 +37,7 @@ app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     next();
 });
+
 // Pass user data to all EJS templates
 app.use((req, res, next) => {
     res.locals.user = req.user || null;

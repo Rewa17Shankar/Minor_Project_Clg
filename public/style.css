@@ -50,16 +50,14 @@ a {
     color: #007bff;
 }
 
+/* Updated User Dropdown */
 .user-section {
     position: relative;
 }
 
-.login-btn {
-    background-color: #007bff;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    color: white;
-    font-weight: 500;
+.user-info-wrapper {
+    position: relative;
+    display: inline-block;
 }
 
 .user-info {
@@ -67,11 +65,18 @@ a {
     display: flex;
     align-items: center;
     gap: 8px;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.user-info:hover {
+    color: #007bff; /* Change text color on hover */
 }
 
 .user-menu {
     display: none;
     position: absolute;
+    top: 100%;
     right: 0;
     background: white;
     color: #333;
@@ -80,8 +85,12 @@ a {
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     list-style: none;
     padding: 0;
-    margin-top: 8px;
+    margin-top: 4px;
     min-width: 160px;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+    opacity: 0; /* Initially hidden */
+    visibility: hidden; /* Keep it invisible */
 }
 
 .user-menu li {
@@ -91,6 +100,37 @@ a {
 
 .user-menu li:hover {
     background: #f5f5f5;
+}
+
+.user-info-wrapper:hover .user-menu {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+.user-info-wrapper {
+    padding-right: 20px; /* Added right padding for easier click area */
+}
+
+.user-menu {
+    transition: opacity 0.3s ease, visibility 0s 0.3s; /* Ensure visibility transition happens smoothly */
+}
+
+.user-menu li {
+    padding: 12px 20px; /* Increased padding for better clicking area */
+}
+
+.login-btn {
+    background-color: #007bff;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #0056b3;
 }
 
 /* Carousel */
@@ -103,9 +143,9 @@ a {
 
 .carousel img {
     width: 100%;
-    height: calc(100vh - 52px); /* Adjust height to fill the screen below the navbar (assuming navbar height ≈ 80px) */
+    height: calc(100vh - 52px);
     object-fit: cover;
-    border-radius: 0; /* Full width display, no rounded corners */
+    border-radius: 0;
 }
 
 /* Custom Slider */
@@ -128,6 +168,11 @@ a {
     display: inline-block;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+
+.slider-item:hover {
+    transform: translateY(-5px);
 }
 
 .slider-image {
@@ -154,49 +199,7 @@ a {
 /* Card Section */
 .card-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 1rem;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.card-image {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.card-title {
-    font-weight: 600;
-    margin-top: 1rem;
-    font-size: 16px;
-    display: block;
-    color: #007bff;
-}
-
-.card-genre {
-    font-size: 14px;
-    color: #777;
-    margin-top: 5px;
-}
-
-.card-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 per row */
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     margin-top: 2rem;
 }
@@ -209,11 +212,12 @@ a {
     text-align: center;
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .card-image {
@@ -229,6 +233,11 @@ a {
     color: #007bff;
 }
 
+.card-genre {
+    font-size: 14px;
+    color: #777;
+    margin-top: 5px;
+}
 
 /* Footer */
 .footer {
@@ -281,11 +290,12 @@ a {
     font-size: 20px;
     margin-right: 12px;
     color: #555;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .footer-social a:hover {
     color: #007bff;
+    transform: scale(1.1);
 }
 
 .footer-bottom {

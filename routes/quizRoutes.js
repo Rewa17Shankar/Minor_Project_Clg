@@ -7,6 +7,15 @@ const difficultyLimits = { easy: 10, medium: 25, hard: 50 };
 const db = require("../config/db");
 const { ensureAuthenticated } = require("../middleware/auth"); 
 
+// 📌 About Us Page
+
+
+router.get("/about", (req, res) => {
+    console.log("About route is being hit!");
+    res.render("about", { user: req.user });
+});
+
+
 // 📌 Quiz Setup Page
 router.get("/quiz-setup", (req, res) => {
     if (!req.user) {
@@ -22,7 +31,7 @@ router.get("/dashboard", async (req, res) => {
         console.log("Fetching results for user_id:", user_id);
 
         const results = await db.query(
-            "SELECT correct_answers, total_questions, submitted_at FROM quiz_attempts WHERE user_id = $1 ORDER BY submitted_at DESC",
+            "SELECT correct_answers, total_questions, category, difficulty, submitted_at FROM quiz_attempts WHERE user_id = $1 ORDER BY submitted_at DESC",
             [parseInt(user_id)]
         );
         
@@ -42,6 +51,7 @@ router.get("/quiz", async (req, res) => {
     }
 
     const { category, difficulty } = req.query;
+    console.log("Category:", category, "Difficulty:", difficulty); // ✅ Debugging
     if (!category || !difficulty) {
         return res.redirect("/quiz-setup?error=1");
     }
@@ -115,8 +125,8 @@ router.post("/submit", async(req, res) => {
     // ✅ Insert quiz attempt into the database
   try{
     await db.query(
-        "INSERT INTO quiz_attempts (user_id,  correct_answers, total_questions, submitted_at) VALUES ($1, $2, $3, NOW())",
-        [user_id,  score, total_questions]
+        "INSERT INTO quiz_attempts (user_id,  correct_answers, total_questions, submitted_at, category, difficulty ) VALUES ($1, $2, $3, NOW(), $4, $5)",
+        [user_id,  score, total_questions, category, difficulty]
     );
     console.log("Quiz attempt saved for user_id:", user_id);
   } catch (error) {
