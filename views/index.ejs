@@ -24,20 +24,26 @@
         </div>
         <div class="user-section">
             <% if (!user) { %>
-                <a href="/login" class="login-btn">Login</a>
+              <div class="dropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown()">Login</button>
+                <ul class="dropdown-menu" id="loginDropdown">
+                  <li><a class="dropdown-item" href="/auth/google">Login with Google</a></li>
+                  <!-- <li><a class="dropdown-item" href="/">Continue as Guest</a></li> -->
+                </ul>
+              </div>
             <% } else { %>
-                <div class="user-info-wrapper">
+                <div class="user-info-wrapper" onclick="toggleUserMenu(event)">
                     <div class="user-info">
-                        <span class="user-name"><%= user.username || user.email %></span>
-                        <i class="fas fa-caret-down"></i>
+                      <span><%= user.name || 'User' %></span>
                     </div>
-                    <ul class="user-menu">
-                        <li><a href="/dashboard">Dashboard</a></li>
-                        <li><a href="/logout">Logout</a></li>
+                    <ul class="user-menu" id="userMenu">
+                      <li><a href="/dashboard">Dashboard</a></li>
+                      <li><a href="/logout">Logout</a></li>
                     </ul>
-                </div>
+                  </div>
+                  
             <% } %>
-        </div>
+          </div>      
     </nav>
 
     <!-- Bootstrap Carousel -->
@@ -135,7 +141,7 @@
                     <li><a href="#">Home</a></li>
                     <li><a href="/quiz-setup">Quiz</a></li>
                     <li><a href="/about">About-us</a></li>
-                    <li><a href="/dashboard">Dashboard</a></li>
+                    
                 </ul>
             </div>
             <div class="footer-section">
@@ -157,7 +163,40 @@
     </footer>
 
     <script>
-       
+        function toggleUserMenu(event) {
+            event.stopPropagation();
+            const wrapper = event.currentTarget;
+            const allWrappers = document.querySelectorAll('.user-info-wrapper');
+        
+            // Close any other open dropdowns
+            allWrappers.forEach(el => {
+              if (el !== wrapper) el.classList.remove('active');
+            });
+        
+            // Toggle current one
+            wrapper.classList.toggle('active');
+          }
+        
+          // Close on outside click
+          document.addEventListener('click', function (event) {
+            document.querySelectorAll('.user-info-wrapper').forEach(el => {
+              el.classList.remove('active');
+            });
+          });
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById("loginDropdown");
+            dropdown.classList.toggle("show");
+          }
+        
+          // Optional: close dropdown if clicked outside
+          document.addEventListener("click", function (event) {
+            const dropdown = document.getElementById("loginDropdown");
+            const button = document.querySelector(".dropdown-toggle");
+            if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+              dropdown.classList.remove("show");
+            }
+          });
 
         function confirmDownload(pdfPath) {
             const confirmed = confirm("Do you want to download this PDF?");
