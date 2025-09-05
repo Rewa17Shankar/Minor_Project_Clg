@@ -98,7 +98,7 @@ passport.use(
 
         return done(null, user);
       } catch (err) {
-        console.error("GoogleStrategy error:", err);
+        console.error("GoogleStrategy error:", JSON.stringify(err, null, 2));
         return done(err, null);
       }
     }
