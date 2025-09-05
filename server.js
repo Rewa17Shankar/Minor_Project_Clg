@@ -1,63 +1,131 @@
+// // // Load environment variables
+// // require("dotenv").config();
+
+// // // Import required packages
+// // const express = require("express");
+// // const session = require("express-session");
+// // const passport = require("./config/passport"); // Import Passport setup
+// // const authRoutes = require("./routes/authRoutes");
+// // const quizRoutes = require("./routes/quizRoutes");
+// // const flash = require("express-flash");
+// // const app = express();
+
+// // // Middleware to handle sessions (Only once, placed before passport and routes)
+// // app.use(session({
+// //     secret: process.env.SESSION_SECRET || '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 ', 
+// //     resave: false,
+// //     saveUninitialized: false,
+// //     cookie: { secure: process.env.NODE_ENV === "production"  } // Set secure to true if using HTTPS
+// // }));
+
+// // // Middleware
+// // app.use(express.json()); // For parsing application/json
+// // app.use(express.urlencoded({ extended: true }));
+// // app.use(express.static("public"));
+// // app.set("view engine", "ejs");
+
+// // // Initialize passport and session
+// // app.use(passport.initialize());
+// // app.use(passport.session());
+
+// // // Flash messages middleware
+// // app.use(flash());
+
+// // // Middleware to make flash messages available in views
+// // app.use((req, res, next) => {
+// //     res.locals.error = req.flash("error");
+// //     res.locals.success = req.flash("success");
+// //     next();
+// // });
+
+// // // Pass user data to all EJS templates
+// // app.use((req, res, next) => {
+// //     res.locals.user = req.user || null;
+// //     next();
+// // });
+
+// // // Routes
+// // app.get("/", (req, res) => {
+// //     res.render("index"); // No need to pass user explicitly (handled by res.locals)
+// // });
+
+// // app.use("/", authRoutes); // Handles authentication (Google login)
+// // app.use("/", quizRoutes); // Handles quiz functionality
+
+// // // Start server
+// // const PORT = process.env.PORT || 3000;
+// // app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
+
+
+
+
 // // Load environment variables
 // require("dotenv").config();
 
 // // Import required packages
 // const express = require("express");
 // const session = require("express-session");
-// const passport = require("./config/passport"); // Import Passport setup
+// const path = require("path");
+// const passport = require("./config/passport"); // Passport setup
 // const authRoutes = require("./routes/authRoutes");
 // const quizRoutes = require("./routes/quizRoutes");
 // const flash = require("express-flash");
+
 // const app = express();
 
-// // Middleware to handle sessions (Only once, placed before passport and routes)
-// app.use(session({
-//     secret: process.env.SESSION_SECRET || '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 ', 
+// // -------------------- MIDDLEWARE --------------------
+
+// // Session middleware (must be before passport + routes)
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET || "default_secret_key", // ❌ don’t paste Google key here
 //     resave: false,
 //     saveUninitialized: false,
-//     cookie: { secure: process.env.NODE_ENV === "production"  } // Set secure to true if using HTTPS
-// }));
+//     cookie: {
+//       secure: process.env.NODE_ENV === "production", // true only on HTTPS
+//       httpOnly: true,
+//     },
+//   })
+// );
 
-// // Middleware
-// app.use(express.json()); // For parsing application/json
+// // Body parsers
+// app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
-// app.use(express.static("public"));
+
+// // Static files (serve CSS, JS, images from /public)
+// app.use(express.static(path.join(__dirname, "public")));
+
+// // EJS templates
 // app.set("view engine", "ejs");
 
-// // Initialize passport and session
+// // Passport initialization
 // app.use(passport.initialize());
 // app.use(passport.session());
 
-// // Flash messages middleware
+// // Flash messages
 // app.use(flash());
 
-// // Middleware to make flash messages available in views
+// // Make flash + user available in all EJS views
 // app.use((req, res, next) => {
-//     res.locals.error = req.flash("error");
-//     res.locals.success = req.flash("success");
-//     next();
+//   res.locals.error = req.flash("error");
+//   res.locals.success = req.flash("success");
+//   res.locals.user = req.user || null;
+//   next();
 // });
 
-// // Pass user data to all EJS templates
-// app.use((req, res, next) => {
-//     res.locals.user = req.user || null;
-//     next();
-// });
-
-// // Routes
+// // -------------------- ROUTES --------------------
 // app.get("/", (req, res) => {
-//     res.render("index"); // No need to pass user explicitly (handled by res.locals)
+//   res.render("index"); // user available via res.locals
 // });
 
-// app.use("/", authRoutes); // Handles authentication (Google login)
-// app.use("/", quizRoutes); // Handles quiz functionality
+// app.use("/", authRoutes);
+// app.use("/", quizRoutes);
 
-// // Start server
+// // -------------------- START SERVER --------------------
 // const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
-
-
-
+// app.listen(PORT, () =>
+//   console.log(`🚀 Server running at http://localhost:${PORT}`)
+// );
 
 // Load environment variables
 require("dotenv").config();
@@ -78,11 +146,11 @@ const app = express();
 // Session middleware (must be before passport + routes)
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "default_secret_key", // ❌ don’t paste Google key here
+    secret: process.env.SESSION_SECRET || "default_secret_key",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production", // true only on HTTPS
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
     },
   })
@@ -92,11 +160,14 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files (serve CSS, JS, images from /public)
+// Static files - serve from multiple directories if needed
 app.use(express.static(path.join(__dirname, "public")));
+app.use('/pdfs', express.static(path.join(__dirname, 'pdfs'))); // For PDF files
+app.use('/assets', express.static(path.join(__dirname, 'assets'))); // For assets if they're separate
 
 // EJS templates
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views")); // Explicitly set views directory
 
 // Passport initialization
 app.use(passport.initialize());
@@ -115,11 +186,40 @@ app.use((req, res, next) => {
 
 // -------------------- ROUTES --------------------
 app.get("/", (req, res) => {
-  res.render("index"); // user available via res.locals
+  res.render("index");
+});
+
+// Add a route to check if files exist (for debugging)
+app.get("/debug", (req, res) => {
+  const fs = require('fs');
+  const publicPath = path.join(__dirname, 'public');
+  
+  try {
+    const files = fs.readdirSync(publicPath);
+    res.json({
+      publicPath: publicPath,
+      files: files,
+      loginCssExists: fs.existsSync(path.join(publicPath, 'login.css')),
+      styleCssExists: fs.existsSync(path.join(publicPath, 'style.css'))
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
 });
 
 app.use("/", authRoutes);
 app.use("/", quizRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).send(`File not found: ${req.url}`);
+});
 
 // -------------------- START SERVER --------------------
 const PORT = process.env.PORT || 3000;
