@@ -276,8 +276,14 @@ router.get(
 );
 
 // 📌 Logout
-router.get("/logout", (req, res) => {
-  req.logout(() => res.redirect("/"));
+// router.get("/logout", (req, res) => {
+//   req.logout(() => res.redirect("/"));
+// });
+router.get("/logout", (req, res, next) => {
+  req.logout(err => {
+    if (err) return next(err);
+    res.redirect("/");
+  });
 });
 
 module.exports = router;   // ✅ make sure this is at the end

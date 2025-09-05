@@ -52,14 +52,149 @@
 // module.exports = passport;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// require("dotenv").config();
+// const passport = require("passport");
+// const GoogleStrategy = require("passport-google-oauth20").Strategy;
+// const LocalStrategy = require("passport-local").Strategy;
+// const bcrypt = require("bcryptjs");
+// const supabase = require("./db");
+
+// // ✅ Google OAuth Strategy
+// passport.use(
+//   new GoogleStrategy(
+//     {
+//       clientID: process.env.GOOGLE_CLIENT_ID,
+//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//       callbackURL: process.env.GOOGLE_CALLBACK_URL,
+//     },
+//     async (accessToken, refreshToken, profile, done) => {
+//       try {
+//         // Check if user exists
+//         const { data: existingUser } = await supabase
+//           .from("users")
+//           .select("*")
+//           .eq("google_id", profile.id)
+//           .single();
+
+//         let user = existingUser;
+
+//         if (!user) {
+//           // Insert new user
+//           const { data: newUser, error } = await supabase
+//             .from("users")
+//             .insert([
+//               {
+//                 google_id: profile.id,
+//                 username: profile.displayName,
+//                 email: profile.emails[0].value,
+//               },
+//             ])
+//             .select()
+//             .single();
+
+//           if (error) throw error;
+//           user = newUser;
+//         }
+
+//         return done(null, user);
+//       } catch (err) {
+//         console.error("GoogleStrategy error:", JSON.stringify(err, null, 2));
+//         return done(err, null);
+//       }
+//     }
+//   )
+// );
+
+// // ✅ Local Strategy
+// passport.use(
+//   new LocalStrategy({ usernameField: "email" }, async (email, password, done) => {
+//     try {
+//       const { data: user, error } = await supabase
+//         .from("users")
+//         .select("*")
+//         .eq("email", email)
+//         .single();
+
+//       if (error || !user) {
+//         return done(null, false, { message: "User not found" });
+//       }
+
+//       const isMatch = await bcrypt.compare(password, user.password);
+//       if (!isMatch) {
+//         return done(null, false, { message: "Incorrect password" });
+//       }
+
+//       return done(null, user);
+//     } catch (err) {
+//       return done(err);
+//     }
+//   })
+// );
+
+// // ✅ Serialize / Deserialize
+// passport.serializeUser((user, done) => {
+//   done(null, user.id);
+// });
+
+// passport.deserializeUser(async (id, done) => {
+//   try {
+//     const { data: user, error } = await supabase
+//       .from("users")
+//       .select("*")
+//       .eq("id", id)
+//       .single();
+
+//     if (error) return done(error, null);
+//     done(null, user);
+//   } catch (err) {
+//     done(err, null);
+//   }
+// });
+
+// module.exports = passport;
+
+
+
 require("dotenv").config();
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
-const supabase = require("./db");
+const supabase = require("./db"); // Supabase client
 
-// ✅ Google OAuth Strategy
+/**
+ * ✅ Google OAuth Strategy
+ * Handles login/signup with Google and stores user in Supabase `users` table
+ */
 passport.use(
   new GoogleStrategy(
     {
@@ -69,43 +204,51 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        // Check if user exists
-        const { data: existingUser } = await supabase
+        // Check if user exists by google_id
+        const { data: existingUser, error: findError } = await supabase
           .from("users")
           .select("*")
           .eq("google_id", profile.id)
           .single();
 
+        if (findError && findError.code !== "PGRST116") {
+          // PGRST116 = no rows found
+          return done(findError, null);
+        }
+
         let user = existingUser;
 
         if (!user) {
           // Insert new user
-          const { data: newUser, error } = await supabase
+          const { data: newUser, error: insertError } = await supabase
             .from("users")
             .insert([
               {
                 google_id: profile.id,
                 username: profile.displayName,
-                email: profile.emails[0].value,
+                email: profile.emails?.[0]?.value,
               },
             ])
             .select()
             .single();
 
-          if (error) throw error;
+          if (insertError) return done(insertError, null);
           user = newUser;
         }
 
         return done(null, user);
       } catch (err) {
-        console.error("GoogleStrategy error:", JSON.stringify(err, null, 2));
+        console.error("GoogleStrategy error:", err.message);
         return done(err, null);
       }
     }
   )
 );
 
-// ✅ Local Strategy
+/**
+ * ✅ Local Strategy
+ * Handles email/password login with bcrypt check
+ */
 passport.use(
   new LocalStrategy({ usernameField: "email" }, async (email, password, done) => {
     try {
@@ -119,7 +262,7 @@ passport.use(
         return done(null, false, { message: "User not found" });
       }
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = await bcrypt.compare(password, user.password || "");
       if (!isMatch) {
         return done(null, false, { message: "Incorrect password" });
       }
@@ -131,9 +274,11 @@ passport.use(
   })
 );
 
-// ✅ Serialize / Deserialize
+/**
+ * ✅ Serialize / Deserialize User
+ */
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user.id); // store Supabase user ID
 });
 
 passport.deserializeUser(async (id, done) => {
