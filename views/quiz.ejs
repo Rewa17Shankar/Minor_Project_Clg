@@ -41,7 +41,7 @@
       background-color: #ffffff;
       padding: 30px 40px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     h1 {
@@ -95,7 +95,7 @@
   <!-- Navbar -->
   <div class="navbar">
     <div class="navbar-left">IQnition</div>
-    <div class="navbar-right">Welcome, <%= user.name %></div>
+    <div class="navbar-right">Welcome, <%= user.name || user.username || "User" %></div>
   </div>
 
   <!-- Quiz Content -->

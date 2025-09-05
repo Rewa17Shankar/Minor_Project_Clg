@@ -117,7 +117,7 @@
   <!-- Navbar -->
   <div class="navbar">
     <div class="navbar-left">
-      Welcome, <%= user.name %>!
+      Welcome, <%= user.username || user.displayname || "User" %>!
     </div>
     <div class="navbar-right">
       <a href="/">Home</a>
@@ -163,7 +163,7 @@
 
       <button type="submit">Start Quiz</button>
 
-      <% if (query.error) { %>
+      <% if (query && query.error) { %>
         <p class="error-msg">⚠️ Please select a category and difficulty before starting.</p>
       <% } %>
     </form>
