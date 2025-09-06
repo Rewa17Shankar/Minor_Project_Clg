@@ -286,15 +286,169 @@
 // module.exports = router;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const express = require("express");
+// const router = express.Router();
+// const supabase = require("../config/db");
+
+// router.get("/about", (req, res) => {
+//   res.render("about", { user: req.user || { isGuest: true } });
+// });
+
+// // ✅ Start Quiz
+// router.get("/quiz", async (req, res) => {
+//   const { category, difficulty } = req.query;
+
+//   if (!category || !difficulty) {
+//     return res.redirect("/quiz-setup?error=true");
+//   }
+
+//   // Save chosen category + difficulty into session
+//   req.session.quizConfig = { category, difficulty };
+
+//   // Fetch questions from Open Trivia API
+//   const fetch = (await import("node-fetch")).default;
+//   let amount = 10;
+//   if (difficulty === "medium") amount = 25;
+//   if (difficulty === "hard") amount = 50;
+
+//   const url = `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}&type=multiple`;
+//   const response = await fetch(url);
+//   const data = await response.json();
+
+//   req.session.questions = data.results;
+
+//   res.render("quiz", { questions: data.results, user: req.user });
+// });
+
+// // ✅ Submit Quiz
+// router.post("/submit", async (req, res) => {
+//   const user = req.user || { isGuest: true }; // handle guest
+//   const questions = req.session.questions || [];
+//   const { category, difficulty } = req.session.quizConfig || {};
+
+//   let score = 0;
+//   const results = [];
+
+//   questions.forEach((q, i) => {
+//     const userAnswer = req.body[`q${i}`];
+//     const isCorrect = userAnswer === q.correct_answer;
+
+//     if (isCorrect) score++;
+
+//     results.push({
+//       question: q.question,
+//       userAnswer,
+//       correctAnswer: q.correct_answer,
+//       isCorrect,
+//     });
+//   });
+
+//   const total = questions.length;
+
+//   // ✅ Save only if logged in
+//   if (user && !user.isGuest) {
+//     try {
+//       const { error } = await supabase
+//         .from("quiz_attempts")
+//         .insert([
+//           {
+//             user_id: user.id,
+//             correct_answers: score,
+//             total_questions: total,
+//             category,
+//             difficulty,
+//           },
+//         ]);
+
+//       if (error) throw error;
+//     } catch (err) {
+//       console.error("Error saving quiz result:", err.message);
+//     }
+//   }
+
+//   res.render("results", { results, score, total, user });
+// });
+
+// // ✅ Dashboard
+// router.get("/dashboard", async (req, res) => {
+//   const user = req.user;
+//   let quizHistory = [];
+
+//   if (user && !user.isGuest) {
+//     try {
+//       const { data, error } = await supabase
+//         .from("quiz_attempts")
+//         .select("*")
+//         .eq("user_id", user.id)
+//         .order("submitted_at", { ascending: false });
+
+//       if (error) throw error;
+//       quizHistory = data;
+//     } catch (err) {
+//       console.error("Error fetching history:", err.message);
+//     }
+//   }
+
+//   res.render("dashboard", { user: user || { isGuest: true }, quizHistory });
+// });
+
+// // ✅ Quiz setup
+// router.get("/quiz-setup", (req, res) => {
+//   if (!req.user) {
+//     return res.redirect("/"); // only allow logged-in users
+//   }
+//   res.render("quiz-setup", { user: req.user, query: req.query });
+// });
+
+// module.exports = router;
+
+
 const express = require("express");
 const router = express.Router();
 const supabase = require("../config/db");
 
+// ✅ About page
 router.get("/about", (req, res) => {
   res.render("about", { user: req.user || { isGuest: true } });
 });
 
-// ✅ Start Quiz
+// ✅ Quiz setup (open to everyone)
+router.get("/quiz-setup", (req, res) => {
+  const user = req.user || { isGuest: true };
+  res.render("quiz-setup", { user, query: req.query });
+});
+
+// ✅ Start Quiz (open to everyone)
 router.get("/quiz", async (req, res) => {
   const { category, difficulty } = req.query;
 
@@ -317,12 +471,12 @@ router.get("/quiz", async (req, res) => {
 
   req.session.questions = data.results;
 
-  res.render("quiz", { questions: data.results, user: req.user });
+  res.render("quiz", { questions: data.results, user: req.user || { isGuest: true } });
 });
 
-// ✅ Submit Quiz
+// ✅ Submit Quiz (open to all → guest can see results but won’t be saved)
 router.post("/submit", async (req, res) => {
-  const user = req.user || { isGuest: true }; // handle guest
+  const user = req.user || { isGuest: true }; // Guest fallback
   const questions = req.session.questions || [];
   const { category, difficulty } = req.session.quizConfig || {};
 
@@ -366,10 +520,11 @@ router.post("/submit", async (req, res) => {
     }
   }
 
+  // Render results (guest will just be "Guest")
   res.render("results", { results, score, total, user });
 });
 
-// ✅ Dashboard
+// ✅ Dashboard (only if logged in)
 router.get("/dashboard", async (req, res) => {
   const user = req.user;
   let quizHistory = [];
@@ -392,13 +547,4 @@ router.get("/dashboard", async (req, res) => {
   res.render("dashboard", { user: user || { isGuest: true }, quizHistory });
 });
 
-// ✅ Quiz setup
-router.get("/quiz-setup", (req, res) => {
-  if (!req.user) {
-    return res.redirect("/"); // only allow logged-in users
-  }
-  res.render("quiz-setup", { user: req.user, query: req.query });
-});
-
 module.exports = router;
-
