@@ -148,7 +148,7 @@ The application is deployed on **Render** platform:
 2. **Start Command**: `npm start`
 3. **Environment Variables**: Configure all required environment variables in Render dashboard
 
-**Live Demo**: [Your Render App URL]
+**Live Demo**: https://minor-project-clg-10.onrender.com/
 
 ## 🤝 Contributing
 
